@@ -1,25 +1,40 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+
+import DurationPicker from './components/duration-picker';
+import Timer from './components/timer';
 
 class App extends Component {
+  state = {
+    breakDuration: 5,
+    sessionDuration: 25,
+  }
+
+  handleStepperClick = (event) => {
+    const [ action, durationType ] = event.target.id.split('-');
+    const stateField = `${durationType}Duration`;
+    const { [stateField]: duration } = this.state;
+    const nextDuration = action === 'increment' ? duration + 1 : duration - 1;
+    this.setState({ [stateField]: nextDuration });
+  }
+
   render() {
+    const { breakDuration, sessionDuration } = this.state;
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        <h1>Pomodoro Clock</h1>
+        <div className="flex-row">
+          <DurationPicker
+            duration={breakDuration}
+            handleStepperClick={this.handleStepperClick}
+            type="break"
+          />
+          <DurationPicker
+            duration={sessionDuration}
+            handleStepperClick={this.handleStepperClick}
+            type="session"
+          />
+        </div>
+        <Timer />
       </div>
     );
   }
